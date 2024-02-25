@@ -25,6 +25,7 @@ describe('services.schema-writter.output', () => {
             expect(expected.has(filePath), `File ${filePath} not expected.`).to.be.true;
             result.push(filePath);
         }
+        writer.close();
 
         // Check output
         expect(result).to.have.members(Array.from(expected));

@@ -11,8 +11,9 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "yarn lint:ts && yarn build:ts",
+    "build": "yarn lint:ts && yarn build:ts && yarn gendoc",
     "build:ts": "tsc --project src/tsconfig.json",
+    "gendoc": "OUTPUTDIR=build/docs && mkdir -p $OUTPUTDIR && typedoc --readme none --excludePrivate --tsconfig src/tsconfig.json --out $OUTPUTDIR src/index.ts",
     "clean": "rm -rf lib && rm -rf output",
     "start": "ts-node --project src/tsconfig.json src/index.ts",
     "lint:ts": "eslint src --ext .ts,.tsx",
@@ -38,6 +39,7 @@
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "typedoc": "^0.25.8",
     "typescript": "^5.3.3"
   },
   "dependencies": {

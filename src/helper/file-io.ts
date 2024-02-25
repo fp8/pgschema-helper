@@ -53,8 +53,8 @@ export function readLineByLine(input: string | fs.ReadStream): readline.Interfac
 export function* filesInDirectory(dirname: string, filesOnly = false): Iterable<TFilesInDirectoryEntry> {
     const files = fs.readdirSync(dirname);
     for (const name of files) {
-        var filePath = nodePath.join(dirname, name);
-        var stat = fs.statSync(filePath);
+        const filePath = nodePath.join(dirname, name);
+        const stat = fs.statSync(filePath);
         if (stat.isFile() || stat.isSymbolicLink()) {
             yield { type: 'file', filePath, stat};
         } else if (stat.isDirectory()) {

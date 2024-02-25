@@ -35,7 +35,17 @@ export type TTableOrView = {
 }
 
 /**
- * Parse the full schema file produced by pgdump
+ * Parse the full schema file produced by `pgdump --schema-only` and break this file into individual
+ * components such as table, view, function, etc and save them into a designated output directory.
+ * 
+ * ```typescript
+ * const writer = new SchemaWritter('./output');
+ * const lines = readLineByLine('input/schema.sql');
+ * for await (const line of lines) {
+ *     writer.writeOutput(line);
+ * }
+ * writer.close();
+ * ```
  */
 export class SchemaWritter {
     private schemaOutputStream: fs.WriteStream;
