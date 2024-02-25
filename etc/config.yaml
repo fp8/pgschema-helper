@@ -1,0 +1,7 @@
+publicHostIps:
+  exa_db_dev: "34.76.190.112"
+  exa_db_uat: "34.107.76.202"
+  exa_db_prod: "34.159.76.25"
+
+outputDir: "output"
+outputFile: "full-schema.sql"

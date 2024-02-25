@@ -1,0 +1,145 @@
+{
+    "data": [
+        {
+            "input": "-- Name: import; Type: SCHEMA; Schema: -; Owner: postgres",
+            "expected": {
+                "name": "import",
+                "type": "schema",
+                "schema": "import",
+                "owner": "postgres"
+            }
+        },
+        {
+            "input": "-- Name: fun_apm_file_monitor_detail(date, character varying); Type: FUNCTION; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "fun_apm_file_monitor_detail",
+                "type": "function",
+                "schema": "public",
+                "owner": "exa_db"
+            }
+        },
+        {
+            "input": "-- Name: p_upsert_limit_value(date, character varying, date, character varying, character varying, character varying, character varying, character varying, character varying, character varying, character varying, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, numeric, character varying, boolean, character varying, numeric); Type: PROCEDURE; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "p_upsert_limit_value",
+                "type": "procedure",
+                "schema": "public",
+                "owner": "exa_db"
+            }
+        },
+        {
+            "input": "-- Name: portfolio_info; Type: TABLE; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "portfolio_info",
+                "type": "table",
+                "schema": "public",
+                "owner": "exa_db",
+                "table": "portfolio_info"
+            }
+        },
+        {
+            "input": "-- Name: ref_cod_causale_cad_id_seq; Type: SEQUENCE; Schema: import; Owner: exa_db",
+            "expected": null,
+            "TODO": "Need to save to the table file"
+        },
+        {
+            "input": "-- Name: ref_cod_causale_cad id; Type: DEFAULT; Schema: import; Owner: exa_db",
+            "expected": {
+                "name": "ref_cod_causale_cad id",
+                "type": "default",
+                "schema": "import",
+                "owner": "exa_db"
+            }
+        },
+        {
+            "input": "-- Name: view_limit_value; Type: VIEW; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "view_limit_value",
+                "type": "view",
+                "schema": "public",
+                "owner": "exa_db"
+            }
+        },
+        {
+            "input": "-- Name: enum_apm_file_monitor_status; Type: TYPE; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "enum_apm_file_monitor_status",
+                "type": "type",
+                "schema": "public",
+                "owner": "exa_db"
+            }
+        },
+        {
+            "input": "-- Name: portfolio_info portfolio_info_pk; Type: CONSTRAINT; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "portfolio_info_pk",
+                "type": "constraint",
+                "schema": "public",
+                "owner": "exa_db",
+                "table": "portfolio_info"
+            }
+        },
+        {
+            "input": "-- Name: bus_model bus_model_bank; Type: FK CONSTRAINT; Schema: import; Owner: exa_db",
+            "expected": {
+                "name": "bus_model_FK_bus_model_bank",
+                "type": "fk_constraint",
+                "schema": "import",
+                "owner": "exa_db",
+                "table": "bus_model",
+                "fk_name": "bus_model_bank"
+            }
+        },
+        {
+            "input": "-- Name: position fkjj73ovv9odu76jsmcdobl8w39; Type: FK CONSTRAINT; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "position_FK_fkjj73ovv9odu76jsmcdobl8w39",
+                "type": "fk_constraint",
+                "schema": "public",
+                "owner": "exa_db",
+                "table": "position",
+                "fk_name": "fkjj73ovv9odu76jsmcdobl8w39"
+            }
+        },
+        {
+            "input": "-- Name: idx_position_portfolio_position_type; Type: INDEX; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "idx_position_portfolio_position_type",
+                "type": "index",
+                "schema": "public",
+                "owner": "exa_db"
+            },
+            "TODO": "Need to save to the table file"
+        },
+        {
+            "input": "-- Name: SCHEMA import; Type: ACL; Schema: -; Owner: postgres",
+            "expected": {
+                "name": "import",
+                "type": "acl",
+                "schema": "import",
+                "owner": "postgres",
+                "acl_type": "schema"
+            }
+        },
+        {
+            "input": "-- Name: PROCEDURE p_insert_limit_value(in_rpt_date date, in_limit_value_key character varying, in_limit_key character varying, in_limit_display character varying, in_abi character varying, in_ia_id character varying, in_ia_name character varying, in_ia_description character varying, in_ic_id character varying, in_ic_description character varying, in_l1max numeric, in_l1max_perc numeric, in_l1min numeric, in_l1min_perc numeric, in_l2max numeric, in_l2max_perc numeric, in_l2min numeric, in_l2min_perc numeric, in_max numeric, in_max_perc numeric, in_min numeric, in_min_perc numeric, in_rl_limit_name character varying, in_rp_exceed boolean, in_rp_in_limits character varying, in_rp_value numeric); Type: ACL; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "p_insert_limit_value",
+                "type": "acl",
+                "schema": "public",
+                "owner": "exa_db",
+                "acl_type": "procedure"
+            }
+        },
+        {
+            "input": "-- Name: TABLE limit_value; Type: ACL; Schema: public; Owner: exa_db",
+            "expected": {
+                "name": "limit_value",
+                "type": "acl",
+                "schema": "public",
+                "owner": "exa_db",
+                "acl_type": "table"
+            }
+        }
+    ]
+}

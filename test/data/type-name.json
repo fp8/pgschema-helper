@@ -1,0 +1,36 @@
+{
+    "data": [
+        {
+            "input": "-- Name: SCHEMA import; Type: ACL; Schema: -; Owner: postgres",
+            "expected": {
+                "schema": "import",
+                "name": "import",
+                "type": "schema"
+            }
+        },
+        {
+            "input": "-- Name: TABLE limit_value; Type: ACL; Schema: public; Owner: exa_db",
+            "expected": {
+                "schema": "public",
+                "name": "limit_value",
+                "type": "table"
+            }
+        },
+        {
+            "input": "-- Name: portfolio_info portfolio_info_pk; Type: CONSTRAINT; Schema: public; Owner: exa_db",
+            "expected": {
+                "schema": "public",
+                "name": "portfolio_info",
+                "type": "table"
+            }
+        },
+        {
+            "input": "-- Name: bus_model bus_model_bank; Type: FK CONSTRAINT; Schema: import; Owner: exa_db",
+            "expected": {
+                "schema": "import",
+                "name": "bus_model",
+                "type": "table"
+            }
+        }
+    ]
+}
