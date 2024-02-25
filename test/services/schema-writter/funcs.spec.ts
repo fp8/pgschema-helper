@@ -1,13 +1,11 @@
-import * as readline from 'readline';
+import {expect, loadDataFile, loadDataFileAsStream} from '../../testlib';
 
-import {expect, loadDataFile, loadDataFileAsStream} from '../testlib';
-
-import { EnumSchemaObjectType, ParsedSchemaObject } from '../../src/models';
+import { EnumSchemaObjectType, ParsedSchemaObject } from '../../../src/models';
 import {
-    SchemaWritter, parseSchemaObjectFromLine,
+    parseSchemaObjectFromLine,
     getObjectForPathFromSchemaObject, amendParsedObject,
     TTableOrView
-} from '../../src/services/schema-writter';
+} from '../../../src/services/schema-writter';
 
 
 interface IObjectNameConfig {
@@ -32,7 +30,7 @@ interface INameAndTypes {
 
 
 
-describe('services.schema-writter', () => {
+describe('services.schema-writter.funcs', () => {
     it('parseSchemaObjectFromLine', () => {
         const config: IObjectNameConfigs = loadDataFile('object-names.json');
 
@@ -78,15 +76,5 @@ describe('services.schema-writter', () => {
         expect(parsed.table).to.equal('position');
     });
 
-    it('SchemaWritter', async () => {
-        const writer = new SchemaWritter('./output');
-        const fileStream = loadDataFileAsStream('schema.sql');
-        const rl = readline.createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-          });
-          for await (const line of rl) {
-            writer.writeOutput(line);
-          }
-    });
+
 });

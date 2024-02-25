@@ -1,25 +1,19 @@
 import * as fs from 'fs';
-import { IJson } from 'jlog-facade';
 
 
 
-function getDataFilename(path: string): string {
+/**
+ * Get the filename for a file in the test/data directory
+ * 
+ * @param path 
+ * @returns 
+ */
+export function getDataFilename(path: string): string {
     if (path.startsWith('/')) {
         return path;
     } else {
         return `test/data/${path}`;
     }
-}
-
-/**
- * Return a path as a stream
- *
- * @param path 
- * @returns 
- */
-export function loadDataFileAsStream(path: string): fs.ReadStream {
-    const filepath = getDataFilename(path);
-    return fs.createReadStream(filepath, {encoding: 'utf8'});
 }
 
 /**

@@ -9,7 +9,7 @@ import { ParsedSchemaObject, EnumSchemaObjectType, IParsedSchemaObjectRaw } from
 
 const logger = getLogger('services.SchemaWritter');
 
-// Regular expressions to parse schema objects
+// Regular expressions to parse raw schema objects that is fine tuned using parseRawSchemaObjects
 const REGEX_SCHEMA_OBJECT = /^-- Name: (.+); Type: ([\w ]+); Schema: (\w+|-); Owner: (\w+)/;
 // Regular expressions to extract function name from line
 const REGEX_FUNCTION_NAME = /^(\w+)\(/;
@@ -35,7 +35,17 @@ export type TTableOrView = {
 }
 
 /**
- * Parse the full schema file produced by pgdump
+ * Parse the full schema file produced by `pgdump --schema-only` and break this file into individual
+ * components such as table, view, function, etc and save them into a designated output directory.
+ * 
+ * ```typescript
+ * const writer = new SchemaWritter('./output');
+ * const lines = readLineByLine('input/schema.sql');
+ * for await (const line of lines) {
+ *     writer.writeOutput(line);
+ * }
+ * writer.close();
+ * ```
  */
 export class SchemaWritter {
     private schemaOutputStream: fs.WriteStream;
@@ -62,7 +72,14 @@ export class SchemaWritter {
         this.schemaOutputStream = fs.createWriteStream(outfile);
     }
 
+    /**
+     * Parse the line from schema file and generate the output file based on the name of the schema
+     * object
+     * 
+     * @param line 
+     */
     public writeOutput(line: string): void {
+        // If parsed object is detected, create the output.  Otherwise continue parsing
         const parsed = parseSchemaObjectFromLine(line);
         if (parsed) {
             this.setTableOrView(parsed);
@@ -180,7 +197,7 @@ export function amendParsedObject(line: string, parsed?: ParsedSchemaObject): vo
  * @param outputDir 
  * @returns 
  */
-function generateOutputSqlFileName(input: ParsedSchemaObject, outputDir: string, tableOrView: TTableOrView): string {
+export function generateOutputSqlFileName(input: ParsedSchemaObject, outputDir: string, tableOrView: TTableOrView): string {
     const { schema, type, name } = getObjectForPathFromSchemaObject(input, tableOrView);
 
     const dirname = nodePath.join(outputDir, schema, type);
@@ -243,7 +260,7 @@ export function getObjectForPathFromSchemaObject(input: ParsedSchemaObject, tabl
  * @param message 
  * @returns 
  */
-function getMatchedStringByPosition(input: RegExpExecArray, position: number, message: string): string {
+export function getMatchedStringByPosition(input: RegExpExecArray, position: number, message: string): string {
     let result: string | undefined = undefined;
     if (input && input.length > position) {
         let positionResult = input[position];
@@ -263,14 +280,20 @@ function getMatchedStringByPosition(input: RegExpExecArray, position: number, me
 }
 
 /**
- * Parse raw schema objects into a more useful format
+ * This function parses the raw schema object obtained from following in the schema file:
+ * 
+ * * `-- Name: fun_get_rpt_date_by_int_date(integer); Type: FUNCTION; Schema: public; Owner: exa_db`
+ * 
+ * It returns a [ParsedSchemaObject] instance to signal the that a new file should be created to
+ * host the data of that object.  If it returns undefined, it means that the section follwing
+ * the `-- Name:` line should be appended to the previous file.
  * 
  * @param input 
  */
-function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | undefined {
+export function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | undefined {
     const owner = input.owner;
     const type = ParsedSchemaObject.parseType(input.type);
-    
+
     let name = input.name;
     let schema = input.schema;
 
@@ -281,9 +304,17 @@ function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | 
 
 
     switch (type) {
+        /**
+         * Do not process sequence so it can be collected with the table
+         */
         case EnumSchemaObjectType.sequence:
-            // Do not process sequence so it can be collected with the table
             return;
+
+        /**
+         * Parse: `-- Name: bus_model bus_model_pkey; Type: CONSTRAINT; Schema: import; Owner: exa_db`
+         * 
+         * where the name of the constraint is `bus_model_pkey` and the table is `bus_model`
+         */
         case EnumSchemaObjectType.constraint: {
             if (name.indexOf(' ') > -1) {
                 const parts = name.split(' ');
@@ -292,6 +323,12 @@ function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | 
             }
             break;
         }
+
+        /**
+         * Parse: `-- Name: bus_model bus_model_bank; Type: FK CONSTRAINT; Schema: import; Owner: exa_db`
+         * 
+         * where the name of the constraint is build to become `bus_model_FK_bus_model_bank` and the table is `bus_model`
+         */
         case EnumSchemaObjectType.fk_constraint: {
             if (name.indexOf(' ') > -1) {
                 const parts = name.split(' ');
@@ -301,10 +338,23 @@ function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | 
             }
             break;
         }
+
+        /**
+         * Parse: `-- Name: import; Type: SCHEMA; Schema: -; Owner: postgres`
+         * 
+         * Set the schema to be the name as it is returned as `-`
+         */
         case EnumSchemaObjectType.schema: {
             schema = name;
             break;
         }
+
+        /**
+         * Parse: `-- Name: fun_active_rec_source_ref(date); Type: FUNCTION; Schema: public; Owner: exa_db`
+         * 
+         * Extract the function name of `fun_active_rec_source_ref` from `fun_active_rec_source_ref(date)` using
+         * regex REGEX_FUNCTION_NAME.  If regex fails to match, throw an error.
+         */
         case EnumSchemaObjectType.function: {
             const m = REGEX_FUNCTION_NAME.exec(name);
             if (m) {
@@ -314,6 +364,13 @@ function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | 
             }
             break;
         }
+
+        /**
+         * Parse: `-- Name: p_apm_file_monitor_status_process(date); Type: PROCEDURE; Schema: public; Owner: exa_db`
+         * 
+         * Extract the function name of `p_apm_file_monitor_status_process` from `p_apm_file_monitor_status_process(date)` using
+         * regex REGEX_FUNCTION_NAME.  If regex fails to match, throw an error.
+         */
         case EnumSchemaObjectType.procedure: {
             const m = REGEX_FUNCTION_NAME.exec(name);
             if (m) {
@@ -323,10 +380,23 @@ function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | 
             }
             break;
         }
+
+        /**
+         * Parse: `-- Name: abi_gdl; Type: TABLE; Schema: import; Owner: exa_db`
+         * 
+         * Set the table to be the parsed name
+         */
         case EnumSchemaObjectType.table: {
             table = name;
             break;
         }
+
+        /**
+         * Parse: `-- Name: TABLE limit_value; Type: ACL; Schema: public; Owner: exa_db`
+         * 
+         * Parse the `TABLE limit_value` and set the name to `limit_value` and the acl_type to `table` using
+         * regex REGEX_ACL_NAME.  If regex fails to match, throw an error.
+         */
         case EnumSchemaObjectType.acl: {
             const m = REGEX_ACL_NAME.exec(name);
             if (m) {
@@ -341,9 +411,15 @@ function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | 
             }
             break;
         }
+
+        /**
+         * No default.  If case is not triggered, leave the fields as is from raw parsed object
+         */
     }
 
     const output = ParsedSchemaObject.create({name, type, schema, owner});
+
+    // Set the optional fields
     if (table) {
         output.table = table;
     }
@@ -386,7 +462,6 @@ export function parseSchemaObjectFromLine(line: string): ParsedSchemaObject | un
         return parseRawSchemaObjects(rawObjects);
     } else {
         logger.error(`Failed to parse line: ${line}`);
+        return undefined;
     }
-
-    return undefined;
 }
