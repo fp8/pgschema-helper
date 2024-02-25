@@ -18,7 +18,7 @@
     "build:ts": "tsc --project src/tsconfig.json",
     "gendoc": "OUTPUTDIR=build/docs && mkdir -p $OUTPUTDIR && typedoc --readme none --excludePrivate --tsconfig src/tsconfig.json --out $OUTPUTDIR src/index.ts",
     "clean": "rm -rf build && rm -rf lib && rm -rf output",
-    "start": "ts-node --project src/tsconfig.json src/index.ts",
+    "start": "ts-node --project src/tsconfig.json src/pgschema-generator.ts",
     "lint:ts": "eslint src --ext .ts,.tsx",
     "lint": "yarn lint:ts",
     "test:unit": "ts-mocha --project test/tsconfig.json -r tsconfig-paths/register 'test/*.spec.ts' 'test/**/*.spec.ts'",
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@fp8/simple-config": "^0.5.1",
+    "getopts": "^2.3.0",
     "jlog-facade": "^0.8.0"
   }
 }
