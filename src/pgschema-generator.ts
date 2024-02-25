@@ -118,8 +118,6 @@ async function main() {
         for await (const line of lines) {
             writer.writeOutput(line);
         }
-    } catch (error) {
-        throw error;
     } finally {
         writer.close();
     }
