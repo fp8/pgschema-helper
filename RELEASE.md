@@ -1,6 +1,6 @@
 # pgschema-helper Release Note
 
-## 0.3.0 [2024-02-25]
+## 0.2.1 [2024-02-25]
 
 * Added `pgschema-generator` as a cli capable of generating output from STDIN
 
