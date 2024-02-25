@@ -31,7 +31,7 @@ Options:
     --help          Show help
     `;
 
-    console.log(message.replace(REGEX_LEADING_SPACE, ''));
+    console.error(message.replace(REGEX_LEADING_SPACE, ''));
     process.exit(exitCode);
 }
 
@@ -87,7 +87,6 @@ function readRunArgs(): IRunArgs {
         result.outputDir = options.output;
     }
 
-    console.log(result);
     return result;
 }
 
