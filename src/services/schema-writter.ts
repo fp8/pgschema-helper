@@ -62,7 +62,14 @@ export class SchemaWritter {
         this.schemaOutputStream = fs.createWriteStream(outfile);
     }
 
+    /**
+     * Parse the line from schema file and generate the output file based on the name of the schema
+     * object
+     * 
+     * @param line 
+     */
     public writeOutput(line: string): void {
+        // If parsed object is detected, create the output.  Otherwise continue parsing
         const parsed = parseSchemaObjectFromLine(line);
         if (parsed) {
             this.setTableOrView(parsed);
@@ -180,7 +187,7 @@ export function amendParsedObject(line: string, parsed?: ParsedSchemaObject): vo
  * @param outputDir 
  * @returns 
  */
-function generateOutputSqlFileName(input: ParsedSchemaObject, outputDir: string, tableOrView: TTableOrView): string {
+export function generateOutputSqlFileName(input: ParsedSchemaObject, outputDir: string, tableOrView: TTableOrView): string {
     const { schema, type, name } = getObjectForPathFromSchemaObject(input, tableOrView);
 
     const dirname = nodePath.join(outputDir, schema, type);
@@ -243,7 +250,7 @@ export function getObjectForPathFromSchemaObject(input: ParsedSchemaObject, tabl
  * @param message 
  * @returns 
  */
-function getMatchedStringByPosition(input: RegExpExecArray, position: number, message: string): string {
+export function getMatchedStringByPosition(input: RegExpExecArray, position: number, message: string): string {
     let result: string | undefined = undefined;
     if (input && input.length > position) {
         let positionResult = input[position];
@@ -273,7 +280,7 @@ function getMatchedStringByPosition(input: RegExpExecArray, position: number, me
  * 
  * @param input 
  */
-function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | undefined {
+export function parseRawSchemaObjects(input: ParsedSchemaObject): ParsedSchemaObject | undefined {
     const owner = input.owner;
     const type = ParsedSchemaObject.parseType(input.type);
 
@@ -445,7 +452,6 @@ export function parseSchemaObjectFromLine(line: string): ParsedSchemaObject | un
         return parseRawSchemaObjects(rawObjects);
     } else {
         logger.error(`Failed to parse line: ${line}`);
+        return undefined;
     }
-
-    return undefined;
 }

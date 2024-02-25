@@ -1,9 +1,8 @@
 import * as fs from 'fs';
-import { IJson } from 'jlog-facade';
 
 
 
-function getDataFilename(path: string): string {
+export function getDataFilename(path: string): string {
     if (path.startsWith('/')) {
         return path;
     } else {

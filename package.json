@@ -18,7 +18,7 @@
     "lint:ts": "eslint src --ext .ts,.tsx",
     "lint": "yarn lint:ts",
     "test:unit": "ts-mocha --project test/tsconfig.json -r tsconfig-paths/register 'test/*.spec.ts' 'test/**/*.spec.ts'",
-    "test": "yarn test:unit"
+    "test": "yarn clean && yarn test:unit"
   },
   "devDependencies": {
     "@types/chai": "^4.3.5",
