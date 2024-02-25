@@ -13,6 +13,11 @@ npm i pgschema-helper
 
 ### Library
 
+The [SchemaWritter](https://fp8.github.io/pgschema-helper/classes/SchemaWritter.html) is the class that will parse
+the schema sql line by line and generate the output to the specified directory on the fly.  To help processing of
+the incoming schema sql line by line, use [readLineByLine](https://fp8.github.io/pgschema-helper/functions/readLineByLine.html)
+that is designed for this purpose.
+
 ```typescript
 const writer = new SchemaWritter('./output');
 const lines = readLineByLine('./input/schema.sql');
@@ -35,3 +40,7 @@ Options:
     --output, -o    Output directory [default: ./output]
     --help          Show help
 ```
+
+## Documentation
+
+* [pgschema-helper](https://fp8.github.io/pgschema-helper/)
