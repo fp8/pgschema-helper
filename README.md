@@ -11,6 +11,8 @@ npm i pgschema-helper
 
 ## Usage
 
+### Library
+
 ```typescript
 const writer = new SchemaWritter('./output');
 const lines = readLineByLine('./input/schema.sql');
@@ -18,4 +20,18 @@ for await (const line of lines) {
     writer.writeOutput(line);
 }
 writer.close();
+```
+
+### CLI
+
+```
+Usage:
+    pgschema-generator [options] <schema-file>
+
+Read from STDIN:
+    * pass '-' as <schema-file> 
+
+Options:
+    --output, -o    Output directory [default: ./output]
+    --help          Show help
 ```
